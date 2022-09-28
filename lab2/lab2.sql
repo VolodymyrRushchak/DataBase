@@ -1,4 +1,4 @@
-/*# 1
+# 1
 SELECT AVG(balance) AS average_balance FROM rushchak.card_info; 
 
 # 2
@@ -20,11 +20,14 @@ INNER JOIN rushchak.account ON client.id = account.client_id
 INNER JOIN rushchak.card ON account.id = card.account_id
 INNER JOIN rushchak.card_info ON card.card_info_id = card_info.id;
 
-
 # 6
-SELECT * FROM rushchak.account
-INNER JOIN rushchak.client ON account.client_id = client.id
-ORDER BY account.account_name;
+SELECT country, SUM(balance)
+FROM rushchak.card_info
+INNER JOIN rushchak.card ON card.card_info_id = card_info.id
+INNER JOIN rushchak.account ON account.id = card.account_id
+INNER JOIN rushchak.client ON client.id = account.client_id
+INNER JOIN rushchak.home_address ON home_address.id = client.home_address_id
+GROUP BY country;
 
 #7
 SELECT CONCAT(sender.name, ' ', sender.surname) AS Sender, transaction.amount, CONCAT(receiver.name, ' ', receiver.surname) AS Receiver
@@ -42,8 +45,16 @@ SELECT COUNT(client.id) as NumberOfClients, home_address.country
 FROM rushchak.client
 LEFT JOIN rushchak.home_address ON client.home_address_id = home_address.id
 GROUP BY home_address.country
-ORDER BY COUNT(client.id) DESC;*/
+ORDER BY COUNT(client.id) DESC;
 
-#9
+# 9
+SELECT FORMAT(balance, 0) AS Balance, FORMAT(balance * (interest_rate/100), 2) AS NextIncome
+FROM rushchak.card_info
+INNER JOIN rushchak.card ON card.card_info_id = card_info.id
+INNER JOIN rushchak.card_type ON card_type.id = card.card_type_id;
+
+# 10
+SELECT * FROM rushchak.account 
+WHERE date_created > SUBDATE(NOW(), INTERVAL 2 YEAR);
 
 
